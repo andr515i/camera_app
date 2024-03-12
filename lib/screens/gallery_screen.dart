@@ -1,8 +1,9 @@
 import 'dart:typed_data';
-
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:camera_app/providers/camera_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -13,18 +14,32 @@ class GalleryScreen extends StatefulWidget {
 
 class _GalleryScreenState extends State<GalleryScreen> {
   late Future<List<Uint8List>> _loadPicturesFuture;
+  List<Uint8List> _pictures = [];
+  late Image _emptyPicture;
 
   @override
   void initState() {
     super.initState();
     final cameraProvider = Provider.of<CameraProvider>(context, listen: false);
     _loadPicturesFuture = cameraProvider.loadAllPictures();
+    _loadPicturesFuture.then((pictures) {
+      setState(() {
+        _pictures = pictures;
+        _emptyPicture = const Image(image: AssetImage("images/empty.png"));
+      });
+    });
+  }
+
+  void _removePicture(Uint8List pictureBytes) {
+    setState(() {
+      _pictures.remove(pictureBytes);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Gallery')),
+      appBar: AppBar(title: const Text('Gallery')),
       body: Stack(
         children: [
           FutureBuilder<List<Uint8List>>(
@@ -45,13 +60,25 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   mainAxisSpacing: 25,
                   children: pictures.map((pictureBytes) {
                     return DragTarget<Uint8List>(
-                      builder: (context, candidateData, rejectedData) {
-                        return Container(
-                          child: Image.memory(pictureBytes),
-                        );
+                      builder: (context, acceptedData, rejectedData) {
+                        return DottedBorder(
+                            borderType: BorderType.RRect,
+                            radius: const Radius.circular(12),
+                            padding: const EdgeInsets.all(6),
+                            color: Colors.grey,
+                            strokeWidth: 2,
+                            dashPattern: const [8],
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: SizedBox(
+                                  height: 200,
+                                  width: 200,
+                                  // child: Image.asset("empty.png")
+                                  child: _emptyPicture),
+                            ));
                       },
                       onAcceptWithDetails: (data) {
-                        // Handle the dropped image here
+                        _emptyPicture = Image.memory(data.data);
                       },
                     );
                   }).toList(),
@@ -81,37 +108,38 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       topRight: Radius.circular(20),
                     ),
                   ),
-                  child: FutureBuilder<List<Uint8List>>(
-                    future: _loadPicturesFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Error: ${snapshot.error}'),
-                        );
-                      } else if (snapshot.hasData) {
-                        final pictures = snapshot.data!;
-                        return GridView.count(
-                          controller: scrollController,
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 25,
-                          children: pictures.map((pictureBytes) {
-                            return Draggable(
-                              data: pictureBytes,
-                              feedback: Image.memory(pictureBytes),
-                              child: Image.memory(pictureBytes),
-                            );
-                          }).toList(),
-                        );
-                      } else {
-                        return const Center(
-                          child: Text('No pictures found.'),
-                        );
-                      }
-                    },
+                  child: CustomScrollView(
+                    controller: scrollController,
+                    slivers: [
+                      SliverPadding(
+                        padding: const EdgeInsets.all(16),
+                        sliver: SliverGrid(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final pictureBytes = _pictures[index];
+                              return LongPressDraggable(
+                                data: pictureBytes,
+                                feedback: Image.memory(pictureBytes),
+                                child: Image.memory(pictureBytes),
+                                onDragEnd: (details) {
+                                  if (details.wasAccepted) {
+                                    _removePicture(pictureBytes);
+                                  }
+                                },
+                              );
+                            },
+                            childCount: _pictures.length,
+                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 25,
+                            crossAxisSpacing: 25,
+                            childAspectRatio: 1,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
