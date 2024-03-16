@@ -6,14 +6,17 @@ import 'package:camera_app/screens/camera_screen.dart';
 import 'package:camera_app/screens/gallery_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:camera_app/providers/camera_provider.dart';
-import 'package:camera_app/providers/picture_provider.dart';
 
 late CameraController _cameraController;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  debugPrint('main called');
+
   final cameras = await availableCameras();
+
   _cameraController = CameraController(cameras[0], ResolutionPreset.medium);
+  
   await _cameraController.initialize();
 
   runApp(MyApp(
@@ -31,7 +34,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
             create: (_) => CameraProvider(_cameraController)),
-        ChangeNotifierProvider(create: (_) => PictureProvider()),
       ],
       child: MaterialApp(
         title: 'Camera App',
