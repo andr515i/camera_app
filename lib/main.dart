@@ -1,6 +1,9 @@
 // main.dart
 
 import 'package:camera/camera.dart';
+import 'package:camera_app/interfaces/Camera_app_db_inteface.dart';
+import 'package:camera_app/providers/repositories/MockRepo.dart';
+import 'package:camera_app/providers/repositories/PictureRepo.dart';
 import 'package:flutter/material.dart';
 import 'package:camera_app/screens/camera_screen.dart';
 import 'package:camera_app/screens/gallery_screen.dart';
@@ -8,6 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:camera_app/providers/camera_provider.dart';
 
 late CameraController _cameraController;
+IPictureRepository apiRepo = ApiPictureRepository();
+IPictureRepository mockRepo = MockPictureRepository();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -33,7 +38,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => CameraProvider(_cameraController)),
+            // create: (cameraProvider) => CameraProvider(_cameraController, apiRepo)),
+            create: (cameraProvider) => CameraProvider(_cameraController, mockRepo)),
       ],
       child: MaterialApp(
         title: 'Camera App',

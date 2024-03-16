@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:camera_app/providers/camera_provider.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +37,7 @@ class MyDraggablePicture extends StatelessWidget {
 class GalleryScreenState extends State<GalleryScreen> {
   late Future<List<Uint8List>> _loadPicturesFuture;
   List<Uint8List> _pictures = [];
-  Map<int, Uint8List?> _draggedPictures = {};
+  final Map<int, Uint8List?> _draggedPictures = {};
 
   @override
   void initState() {
@@ -89,7 +88,7 @@ class GalleryScreenState extends State<GalleryScreen> {
         }
       },
       onWillAcceptWithDetails: (data) {
-        return base64Encode(data.data!) == encodedPicture;
+        return base64Encode(data.data) == encodedPicture;
       },
       onAcceptWithDetails: (data) {
         setState(() {

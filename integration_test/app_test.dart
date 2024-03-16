@@ -3,13 +3,12 @@ import 'package:camera_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:mockito/mockito.dart';
 
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  late var cameraDescription;
+  late List<CameraDescription> cameraDescription;
  setUp(() async {
     cameraDescription = await availableCameras();
   });
