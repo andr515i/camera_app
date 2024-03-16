@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'camera_provider_tests.mocks.dart';
+import 'camera_provider_test.mocks.dart';
 
 // Mock CameraController
 class MockCameraDescription extends Mock implements CameraDescription {}

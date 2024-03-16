@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:isolate';
 import 'dart:math';
 import 'package:camera/camera.dart';
 import 'package:camera_app/interfaces/Camera_app_db_inteface.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 
 class CameraProvider extends ChangeNotifier {
   late CameraController _cameraController;
