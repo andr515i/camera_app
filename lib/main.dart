@@ -11,35 +11,32 @@ import 'package:provider/provider.dart';
 import 'package:camera_app/providers/camera_provider.dart';
 
 late CameraController _cameraController;
-IPictureRepository apiRepo = ApiPictureRepository();
-IPictureRepository mockRepo = MockPictureRepository();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await _setupCamera();
 
-  debugPrint('main called');
+runApp(MyApp());
+}
 
+Future<void> _setupCamera() async {
   final cameras = await availableCameras();
-
-  _cameraController = CameraController(cameras[0], ResolutionPreset.medium);
-  
+  _cameraController = CameraController(cameras[1], ResolutionPreset.medium);
   await _cameraController.initialize();
-
-  runApp(MyApp(
-    cameras: cameras,
-  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({required this.cameras, super.key});
-  final List<CameraDescription> cameras;
+  MyApp({super.key});
 
+  final IPictureRepository apiRepo = ApiPictureRepository();
+  final IPictureRepository mockRepo = MockPictureRepository();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
             // create: (cameraProvider) => CameraProvider(_cameraController, apiRepo)),
-            create: (cameraProvider) => CameraProvider(_cameraController, mockRepo)),
+            create: (cameraProvider) =>
+                CameraProvider(_cameraController, mockRepo)),
       ],
       child: MaterialApp(
         title: 'Camera App',

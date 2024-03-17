@@ -15,7 +15,7 @@ class ApiPictureRepository implements IPictureRepository {
 
   @override
   Future<List<Uint8List>> loadAllPictures() async {
-    // Return a list of mock data
+    // Return a list of actual data (can be empty)
      try {
       final response = await http.get(Uri.parse('$_apiUrl/GetPicture'));
 
@@ -28,8 +28,8 @@ class ApiPictureRepository implements IPictureRepository {
 
       for (final pictureData in picturesData) {
         if (pictureData.isNotEmpty) {
-          // var pic = await compute(decodePictureData, pictureData);
-          pictures.add(base64Decode(pictureData)); // Convert from base64 string
+          // var pic = await compute(decodePictureData, pictureData); //compute decode data
+          pictures.add(base64Decode(pictureData)); // Convert from base64 string into string picture list
         } else {
           debugPrint('Empty picture received from the API');
         }
@@ -45,7 +45,7 @@ class ApiPictureRepository implements IPictureRepository {
 
   @override
   Future<void> savePicture(int index, Uint8List pictureBytes) async {
-     // Save the picture to the api
+     // Save the picture and send it to the api
 
       var client = http.Client();
     try {
@@ -117,7 +117,8 @@ class ApiPictureRepository implements IPictureRepository {
     return base64Encode(pictureData);
   }
 
-  // compute example 2  // TODO: implement
+  // compute example 2  
+  // TODO: implement
    Uint8List decodePictureData(String pictureData) {
     if (pictureData.isNotEmpty) {
       return base64Decode(pictureData);

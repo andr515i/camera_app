@@ -63,7 +63,7 @@ void main() {
   group("testing custom widget to make sure the correct image is shown", () {
     // 🡅🡆🡇🡇🡇🦅🦅🦅🦅
 
-    testWidgets('CameraScreen displays CameraPreview when API is connected',
+    testWidgets('CameraScreen displays CameraPreview when API is connected🡅🡆🡇🡇🡇🦅🦅🦅🦅',
         (WidgetTester tester) async {
       await tester.pumpWidget(test(mockCameraController: mockCameraController));
 
