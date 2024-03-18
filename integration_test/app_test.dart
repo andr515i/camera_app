@@ -1,24 +1,15 @@
 import 'package:camera_app/screens/gallery_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:camera_app/main.dart' as app;
-import 'package:patrol/patrol.dart'; // Import your main.dart file
+import 'package:patrol/patrol.dart'; 
 
 void main() {
-
   group('Camera App Integration Tests', () {
     patrolTest("Full App Test", (tester) async {
+      
       app.main(); // Start your app
       await tester.pumpAndSettle(); // Wait for everything to load
-
-      try {
-        tester.native.grantPermissionWhenInUse();
-        await tester.pumpAndSettle();
-        tester.native.grantPermissionWhenInUse();
-      } catch (e) {
-        debugPrint("no permissions needed...");
-      }
 
       // Find the camera button and take a picture
       final cameraButtonFinder = find.byKey(const Key("TakePicture"));
@@ -38,8 +29,8 @@ void main() {
 
       // Perform drag and drop test
       // Note: Adjust the logic below based on your app's specific drag-and-drop implementation
-      final firstImage = find.byType(MyDraggablePicture).first;
-      final dragTarget = find.byType(DragTarget).first;
+      // final firstImage = find.byType(MyDraggablePicture).first;
+      // final dragTarget = find.byType(DragTarget).first;
 
 // await tester.dragUntilVisible(
 //   finder: firstImage, // The widget to drag
