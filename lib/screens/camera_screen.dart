@@ -10,6 +10,7 @@ class CameraScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cameraProvider = Provider.of<CameraProvider>(context);
+    cameraProvider.checkConnection();
     cameraProvider.isApiConnected
         ? const SizedBox.shrink()
         : const CircularProgressIndicator();
