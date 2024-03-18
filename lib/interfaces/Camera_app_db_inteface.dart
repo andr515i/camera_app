@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:camera_app/models/login.dart';
+
 abstract class IPictureRepository {
   Future<List<Uint8List>> loadAllPictures();
   Future<void> savePicture(int index, Uint8List pictureBytes);

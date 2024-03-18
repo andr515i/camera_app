@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:camera_app/providers/camera_provider.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class GalleryScreen extends StatefulWidget {
@@ -23,7 +24,9 @@ class MyDraggablePicture extends StatelessWidget {
         color: Colors.transparent,
         child: LongPressDraggable<Uint8List>(
           data: picture,
-          feedback: Image.memory(picture),
+
+          onDragCompleted: () {},
+          feedback: Image.memory(picture, height: 150,),
           child: Container(
             alignment: Alignment.center,
             height: 150,
@@ -51,7 +54,7 @@ class GalleryScreenState extends State<GalleryScreen> {
     });
   }
 
- Widget _buildDragTarget(int index, Uint8List picture) {
+  Widget _buildDragTarget(int index, Uint8List picture) {
     final encodedPicture = base64Encode(picture);
     final draggedPicture = _draggedPictures[index];
 
@@ -99,8 +102,6 @@ class GalleryScreenState extends State<GalleryScreen> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,10 +127,9 @@ class GalleryScreenState extends State<GalleryScreen> {
                         return ListView.builder(
                           itemCount: _pictures.length,
                           itemBuilder: (context, index) {
+                            final pictureBytes = _pictures[index];
 
-                          final pictureBytes = _pictures[index];  
-
-                          return _buildDragTarget(index, pictureBytes);
+                            return _buildDragTarget(index, pictureBytes);
                           },
                         );
                       } else {
