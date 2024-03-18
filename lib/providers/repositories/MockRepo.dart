@@ -1,7 +1,6 @@
 import 'package:camera_app/interfaces/Camera_app_db_inteface.dart';
 import 'package:camera_app/models/login.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:typed_data';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -27,11 +26,10 @@ class MockPictureRepository implements IPictureRepository {
     // Return the highest index in the mock list
     return _pictures.length;
   }
-
   @override
   Future<bool> checkConnection() async {
     // Always return true or false based on testing needs
-    return false;
+    return true;
   }
   
   @override
