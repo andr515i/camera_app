@@ -885,7 +885,7 @@ packages:
     source: hosted
     version: "1.24.9"
   test_api:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: test_api
       sha256: "5c2f730018264d276c20e4f1503fd1308dfbbae39ec8ee63c5236311ac06954b"
