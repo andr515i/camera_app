@@ -7,4 +7,6 @@ abstract class IPictureRepository {
   Future<int> getMaxPictureIndex();
   Future<bool> checkConnection();
   Future<void> login(String username, String password);
+  Future<void> handleResponse(int statusCode);
+  Future<void> sendNotification();
 }

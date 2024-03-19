@@ -26,23 +26,7 @@ void main() {
           find.byType(Image); // Adjust if necessary to match your widget types
       expect(imageFinder, findsWidgets);
 
-      // Perform drag and drop test
-      // Note: Adjust the logic below based on your app's specific drag-and-drop implementation
-      // final firstImage = find.byType(MyDraggablePicture).first;
-      // final dragTarget = find.byType(DragTarget).first;
 
-// await tester.dragUntilVisible(
-//   finder: firstImage, // The widget to drag
-//   view: targetView,   // The widget you want to be visible after dragging
-//   moveStep: const Offset(0, -300), // The step to move per gesture tick. Adjust as necessary.
-//       await tester.pumpAndSettle();
-
-//       // Verify the picture is accepted by the drag target
-//       // This depends on how you visually indicate a successful drag-and-drop in your app
-//       // For example, if the drag target changes color, you can check for that
-//       // Or, if it displays the dragged image, you can check for the presence of two images now
-//       expect(dragTarget,
-//           findsOneWidget); // Replace 'displaysImage' with actual verification logic
     });
   });
 }

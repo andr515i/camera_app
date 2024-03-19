@@ -1,4 +1,8 @@
 // main.dart
+import 'dart:async';
+import 'dart:isolate';
+import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:http/http.dart' as http;
 import 'package:camera/camera.dart';
 import 'package:camera_app/firebase_options.dart';
 import 'package:camera_app/interfaces/Camera_app_db_inteface.dart';
@@ -18,6 +22,7 @@ import 'package:camera_app/providers/camera_provider.dart';
 late CameraController _cameraController;
 final NotificationService _notificationService = NotificationService();
 var index = 0;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -32,6 +37,7 @@ Future<void> main() async {
 
   runApp(MyApp());
 }
+
 
 @pragma('vm:entry-point', )
 Future<void> _backgroundHandler(RemoteMessage message) async {
@@ -103,13 +109,13 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          // title: const Text('Camera App'),
           bottom: const TabBar(
             tabs: [
               Tab(icon: Icon(Icons.camera)),

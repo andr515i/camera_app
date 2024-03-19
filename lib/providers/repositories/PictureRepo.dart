@@ -1,5 +1,7 @@
+import 'dart:html';
+import 'dart:isolate';
+
 import 'package:camera_app/interfaces/Camera_app_db_inteface.dart';
-import 'package:camera_app/models/login.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
@@ -14,6 +16,10 @@ class ApiPictureRepository implements IPictureRepository {
   bool isApiConnected = false;
 
   String tokenString = "";
+
+  late Isolate _isolate;
+
+  late ReceivePort _receivePort;
 
   @override
   Future<List<Uint8List>> loadAllPictures() async {
@@ -57,7 +63,7 @@ class ApiPictureRepository implements IPictureRepository {
       debugPrint(
           '\n-----------------------------------------------------\nsaving picture\n-----------------------------------------------------\n');
       // Convert to base64 string
-      final base64Image = await compute(encodePictureData, pictureBytes);  
+      final base64Image = await compute(encodePictureData, pictureBytes);
       // final base64Image = base64Encode(pictureBytes);
       var response = await client.post(
         Uri.parse('$_apiUrl/SavePicture'),
@@ -157,5 +163,79 @@ class ApiPictureRepository implements IPictureRepository {
     } else {
       throw Exception('Failed to login');
     }
+  }
+
+// This function will run in a separate isolate.
+  void _checkHttpStatusCode(Map<String, dynamic> isolateData) {
+    final sendPort = isolateData['sendPort'];
+    final statusCode = isolateData['statusCode'];
+
+String statusMessage;
+switch (statusCode) {
+  case 200:
+    statusMessage = 'Response status code: 200 - OK';
+    break;
+  case 201:
+    statusMessage = 'Response status code: 201 - Created';
+    break;
+  case 204:
+    statusMessage = 'Response status code: 204 - No Content';
+    break;
+  case 400:
+    statusMessage = 'Response status code: 400 - Bad Request';
+    break;
+  case 401:
+    statusMessage = 'Response status code: 401 - Unauthorized';
+    break;
+  case 403:
+    statusMessage = 'Response status code: 403 - Forbidden';
+    break;
+  case 404:
+    statusMessage = 'Response status code: 404 - Not Found';
+    break;
+  case 500:
+    statusMessage = 'Response status code: 500 - Internal Server Error';
+    break;
+  case 502:
+    statusMessage = 'Response status code: 502 - Bad Gateway';
+    break;
+  case 503:
+    statusMessage = 'Response status code: 503 - Service Unavailable';
+    break;
+  default:
+    statusMessage = 'Response status code: $statusCode';
+    break;
+}
+
+
+    // Send the status message back to the main isolate.
+    sendPort.send(statusMessage);
+  }
+
+  Future<void> handleResponse(int statusCode) async {
+    // Create a ReceivePort to receive messages from the isolate.
+    final receivePort = ReceivePort();
+
+    // Start the isolate.
+    await Isolate.spawn(
+      _checkHttpStatusCode,
+      {
+        'sendPort': receivePort.sendPort,
+        'statusCode': statusCode,
+      },
+    );
+
+    // Receive the status message from the isolate.
+    final statusMessage = await receivePort.first;
+
+    debugPrint(statusMessage);
+  }
+  
+  @override
+  Future<void> sendNotification() async{
+    final response = await http.post(Uri.parse("https://fcm.googleapis.com/fcm/send"), headers: {
+      "Content-Type": "application/json",
+"Authorization": "key=<Server_key>"
+    });
   }
 }
