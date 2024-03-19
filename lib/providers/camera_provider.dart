@@ -12,20 +12,13 @@ class CameraProvider extends ChangeNotifier {
 
   final IPictureRepository _repository;
 
-  late Isolate _isolate;
-
-  late ReceivePort _receivePort;
-
   //  constructor
   CameraProvider(this._cameraController, this._repository) {
     checkConnection();
     // start the connection checker isolate
-    // _startIsolate();
   }
 
   CameraController get cameraController => _cameraController;
-
-
 
   Future<void> takePicture() async {
     checkConnection();
@@ -68,50 +61,24 @@ class CameraProvider extends ChangeNotifier {
 
   Future<void> login(String username, String password) async {
     await _repository.login(username, password);
-    
+
     notifyListeners();
   }
 
+  void startIsolate() async {
+    await _repository.handleResponse(200);
+
+    await _repository.handleResponse(201);
+
+    await _repository.handleResponse(401);
+
+    await _repository.handleResponse(720);
+
+  }
 
   @override
   void dispose() {
-    _receivePort.close();
-    _isolate.kill();
     _cameraController.dispose();
     super.dispose();
   }
-  // void _startIsolate() async {
-//   _receivePort = ReceivePort();
-//   _isolate = await Isolate.spawn(checkConnectionIsolate, [_receivePort.sendPort], onExit: _receivePort.sendPort);
-//   SendPort _isolateSendPort = _receivePort.sendPort;
-//   _receivePort.listen((message) {
-//     if (message is bool) {
-//       isApiConnected = message;
-//       notifyListeners();
-//     }
-//   });
-
-//   // Send the API URL to the isolate after it's been initialized
-//   _isolateSendPort.send('http://10.0.2.2:5275/api/PictureStorage/Ping');
-// }
-
-// // This is the entry point for the isolate.
-// void checkConnectionIsolate(List<dynamic> args) async {
-//   final ReceivePort receivePort = ReceivePort();
-//   SendPort sendPort = args[0];
-//   sendPort.send(receivePort.sendPort);
-//   String apiUrl = await receivePort.first; // Wait for the apiUrl
-
-//
-//   try {
-//     final client = http.Client();
-//
-//     final response = await client.get(Uri.parse(apiUrl));
-
-//
-//     sendPort.send(response.statusCode == 200);
-//   } catch (e) {
-//     sendPort.send(false); // In case of exception, send back false
-//   }
-// }
 }
