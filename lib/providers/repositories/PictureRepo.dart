@@ -23,7 +23,8 @@ class ApiPictureRepository implements IPictureRepository {
           headers: {'Authorization': 'Bearer $tokenString'});
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to load pictures: ${response.statusCode}');
+        throw Exception(
+            'Failed to load pictures: ${jsonDecode(response.body)}');
       }
 
       final picturesData = jsonDecode(response.body);
@@ -56,8 +57,8 @@ class ApiPictureRepository implements IPictureRepository {
       debugPrint(
           '\n-----------------------------------------------------\nsaving picture\n-----------------------------------------------------\n');
       // Convert to base64 string
-      final base64Image = compute(encodePictureData, pictureBytes);
-
+      final base64Image = await compute(encodePictureData, pictureBytes);  
+      // final base64Image = base64Encode(pictureBytes);
       var response = await client.post(
         Uri.parse('$_apiUrl/SavePicture'),
         headers: {
@@ -133,16 +134,14 @@ class ApiPictureRepository implements IPictureRepository {
     }
   }
 
+// normally, you would check up on a database for the given usernames, and then further check their passwords or something of the like, however im just gonna simulate a very simple login function
   @override
   Future<void> login(String username, String password) async {
-    if (username.isEmpty && password.isEmpty ||
-        username == "" && password == "") {
-      debugPrint('wrong credentials.');
-      throw Exception("no login credentials.");
-    }
     // authenticate login up to the api and generate jwt token
-    final LoginModel user =
-        LoginModel(username: username, passwordEncrypted: password);
+    final Map<String, String> user = {
+      'username': username,
+      'passwordEncrypted': password
+    };
 
     final response = await http.post(
       Uri.parse('$_apiUrl/Login'),
@@ -151,9 +150,10 @@ class ApiPictureRepository implements IPictureRepository {
       },
       body: jsonEncode(user),
     );
-
+    debugPrint('response code for login: ${response.statusCode}');
     if (response.statusCode == 200) {
       tokenString = jsonDecode(response.body)['token'];
+      debugPrint('bearer: $tokenString');
     } else {
       throw Exception('Failed to login');
     }

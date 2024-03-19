@@ -13,18 +13,32 @@ class CameraScreen extends StatelessWidget {
     cameraProvider.checkConnection();
     if (cameraProvider.isApiConnected) {
       return Scaffold(
-        body: CameraPreview(cameraProvider.cameraController,
-            key: const Key("CameraPreview")),
-        floatingActionButton: FloatingActionButton(
-          key: const Key("TakePicture"),
-          onPressed: () async {
-            await cameraProvider.takePicture();
-            ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('picture taken')));
-          },
-          child: const Icon(Icons.camera),
-        ),
-      );
+          body: Column(
+        children: [
+          Expanded(
+              child: CameraPreview(
+            cameraProvider.cameraController,
+            child: Padding(
+                padding: const EdgeInsets.all(25),
+                key: const Key("CameraPreview"),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FloatingActionButton(
+                      key: const Key("TakePicture"),
+                      onPressed: () async {
+                        await cameraProvider.takePicture();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('picture taken')));
+                      },
+                      child: const Icon(Icons.camera),
+                    ),
+                  ],
+                )),
+          ))
+        ],
+      ));
     } else {
       cameraProvider.checkConnection();
       return const CircularProgressIndicator();
