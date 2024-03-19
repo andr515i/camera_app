@@ -135,6 +135,11 @@ class ApiPictureRepository implements IPictureRepository {
 
   @override
   Future<void> login(String username, String password) async {
+    if (username.isEmpty && password.isEmpty ||
+        username == "" && password == "") {
+      debugPrint('wrong credentials.');
+      throw Exception("no login credentials.");
+    }
     // authenticate login up to the api and generate jwt token
     final LoginModel user =
         LoginModel(username: username, passwordEncrypted: password);
@@ -148,8 +153,7 @@ class ApiPictureRepository implements IPictureRepository {
     );
 
     if (response.statusCode == 200) {
-      var token = jsonDecode(response.body)['token'];
-      // Store the token using Flutter Secure Storage or similar for future requests
+      tokenString = jsonDecode(response.body)['token'];
     } else {
       throw Exception('Failed to login');
     }
