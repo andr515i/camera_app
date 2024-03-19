@@ -113,8 +113,7 @@ class MockPictureRepository implements IPictureRepository {
     debugPrint(statusMessage);
   }
 
-  @override
-  Future<void> startIsolate() async {}
+
   
   @override
   Future<void> sendNotification() {
