@@ -32,6 +32,8 @@ class MockPictureRepository implements IPictureRepository {
     return true;
   }
   
+
+  // normally, you would check up on a database for the given usernames, and then further check their passwords or something of the like, however im just gonna simulate a very simple login function
   @override
   Future<void> login(String username, String password) async {
     LoginModel user = LoginModel(username: "", passwordEncrypted: "");

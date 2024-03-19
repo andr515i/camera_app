@@ -10,53 +10,55 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
   @override
   void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
+@override
+Widget build(BuildContext context) {
+  final cameraProvider = Provider.of<CameraProvider>(context);
 
-  @override
-  Widget build(BuildContext context) {
-    final cameraProvider = Provider.of<CameraProvider>(context);
-    return Scaffold(
-      body: Center(
-        child: Form(
-            child: Column(
-          children: [
-            Container(
-              height: 150,
+  return Scaffold(
+    body: Stack(
+      children: [
+        // Full-screen background image
+        Positioned(
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Image.asset(
+            "images/goku.gif",
+            fit: BoxFit.fill, // This ensures the image covers the whole screen
+            
+          ),
+        ),
+      
+        Positioned(
+          bottom: 20, // Adjust the positioning 
+          left: 0,
+          right: 0,
+          child: Center( // Center the button horizontally
+            child: ElevatedButton(
+              onPressed: () async {
+                try {
+                  await cameraProvider.login("user", "pass");
+                  await Navigator.pushReplacementNamed(context, '/home');
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Login failed: $e'))
+                  );
+                }
+              },
+              child: const Text(
+                "Login",
+                textScaler: TextScaler.linear(3), // Adjust text scale factor 
+              ),
             ),
-            const Text("enter username:"),
-            TextField(
-              controller: _usernameController,
-            ),
-            const Text("enter password:"),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-            ),
-            ElevatedButton(
-                onPressed: () async {
-                  debugPrint(
-                      'credentials captured: ${_usernameController.text} - ${_passwordController.text}');
-                  try {
-                    await cameraProvider.login(
-                        _usernameController.text, _passwordController.text);
-                    await Navigator.pushReplacementNamed(context, '/home');
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Login failed: $e')));
-                  }
-                },
-                child: const Text("login.")),
-          ],
-        )),
-      ),
-    );
-  }
+          ),
+        ),
+      ],
+    ),
+  );
+}
 }
