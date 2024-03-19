@@ -26,7 +26,7 @@ Future<void> main() async {
 
 Future<void> _setupCamera() async {
   final cameras = await availableCameras();
-  _cameraController = CameraController(cameras[1], ResolutionPreset.medium);
+  _cameraController = CameraController(cameras[1], ResolutionPreset.ultraHigh);
   await _cameraController.initialize();
 }
 
@@ -46,6 +46,11 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Camera App',
+        initialRoute: "/login",
+        routes: {
+          '/login':(context) => const LoginScreen(),
+          '/home':(context) => const MyHomePage()
+        },
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
@@ -61,13 +66,12 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Camera App'),
+          // title: const Text('Camera App'),
           bottom: const TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.login)),
               Tab(icon: Icon(Icons.camera)),
               Tab(icon: Icon(Icons.photo)),
             ],
@@ -75,7 +79,6 @@ class MyHomePage extends StatelessWidget {
         ),
         body: const TabBarView(
           children: [
-            LoginScreen(),
             CameraScreen(),
             GalleryScreen(),
           ],

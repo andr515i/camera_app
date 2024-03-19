@@ -6,7 +6,7 @@ import 'package:camera_app/interfaces/Camera_app_db_inteface.dart';
 import 'package:flutter/foundation.dart';
 
 class CameraProvider extends ChangeNotifier {
-  late CameraController _cameraController;
+  late final CameraController _cameraController;
 
   bool isApiConnected = false;
 
@@ -65,6 +65,13 @@ class CameraProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> login(String username, String password) async {
+    await _repository.login(username, password);
+    
+    notifyListeners();
+  }
+
 
   @override
   void dispose() {
