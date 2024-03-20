@@ -57,6 +57,11 @@ class LoginScreenState extends State<LoginScreen> {
                         await cameraProvider.startIsolate();  // call the isolate starter to test the very simple isolates.
                       },
                       child: const Icon(Icons.dangerous)),
+                  ElevatedButton(
+                      onPressed: () async {
+                        await cameraProvider.sendNotification();  // call the isolate starter to test the very simple isolates.
+                      },
+                      child: const Icon(Icons.notification_add)),
                 ],
               )
             )

@@ -6,11 +6,13 @@ import 'package:flutter/foundation.dart';
 
 // Provides functionalities related to camera operations and picture management.
 class CameraProvider extends ChangeNotifier {
-  late final CameraController _cameraController; // Controls camera actions and configurations.
+  late final CameraController
+      _cameraController; // Controls camera actions and configurations.
 
   bool isApiConnected = false; // Flag to keep track of API connection status.
 
-  final IPictureRepository _repository; // Interface for picture data management.
+  final IPictureRepository
+      _repository; // Interface for picture data management.
 
   // Constructor: Initializes the camera controller and repository.
   CameraProvider(this._cameraController, this._repository) {
@@ -25,8 +27,10 @@ class CameraProvider extends ChangeNotifier {
     checkConnection(); // Ensures the API is connected before taking a picture.
     final XFile picture = await _cameraController.takePicture();
     final pictureBytes = await picture.readAsBytes();
-    int index = await getMaxPictureIndex() + 1; // Calculate the new index for the new picture.
-    await savePicture(index, pictureBytes); // Saves the new picture using the calculated index.
+    int index = await getMaxPictureIndex() +
+        1; // Calculate the new index for the new picture.
+    await savePicture(index,
+        pictureBytes); // Saves the new picture using the calculated index.
   }
 
   // Saves a picture byte array to the repository.
@@ -46,7 +50,10 @@ class CameraProvider extends ChangeNotifier {
     try {
       final allPictures = await loadAllPictures();
       for (final picture in allPictures) {
-        maxIndex = max(maxIndex, picture.length); // Assumes 'length' reflects the picture's index. May need adjustment.
+        maxIndex = max(
+            maxIndex,
+            picture
+                .length); // Assumes 'length' reflects the picture's index. May need adjustment.
       }
     } catch (e) {
       debugPrint('Something went wrong: $e');
@@ -74,6 +81,11 @@ class CameraProvider extends ChangeNotifier {
     await _repository.handleResponse(201);
     await _repository.handleResponse(401);
     await _repository.handleResponse(720);
+  }
+
+  Future<void> sendNotification() async {
+     debugPrint('start');
+    await _repository.sendNotification();
   }
 
   // Cleans up the controller when the provider is disposed.
