@@ -1,5 +1,5 @@
 import 'package:camera/camera.dart';
-import 'package:camera_app/interfaces/Camera_app_db_inteface.dart';
+import 'package:camera_app/interfaces/camera_app_db_interface.dart';
 import 'package:camera_app/providers/camera_provider.dart';
 import 'package:camera_app/providers/repositories/PictureRepo.dart';
 import 'package:flutter_test/flutter_test.dart';

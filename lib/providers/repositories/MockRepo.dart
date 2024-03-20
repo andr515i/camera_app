@@ -1,6 +1,6 @@
 import 'dart:isolate';
 
-import 'package:camera_app/interfaces/Camera_app_db_inteface.dart';
+import 'package:camera_app/interfaces/camera_app_db_interface.dart';
 import 'package:camera_app/models/login.dart';
 import 'package:flutter/foundation.dart';
 

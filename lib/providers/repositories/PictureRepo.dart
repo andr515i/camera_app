@@ -1,7 +1,6 @@
-import 'dart:html';
 import 'dart:isolate';
 
-import 'package:camera_app/interfaces/Camera_app_db_inteface.dart';
+import 'package:camera_app/interfaces/camera_app_db_interface.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
@@ -170,43 +169,42 @@ class ApiPictureRepository implements IPictureRepository {
     final sendPort = isolateData['sendPort'];
     final statusCode = isolateData['statusCode'];
 
-String statusMessage;
-switch (statusCode) {
-  case 200:
-    statusMessage = 'Response status code: 200 - OK';
-    break;
-  case 201:
-    statusMessage = 'Response status code: 201 - Created';
-    break;
-  case 204:
-    statusMessage = 'Response status code: 204 - No Content';
-    break;
-  case 400:
-    statusMessage = 'Response status code: 400 - Bad Request';
-    break;
-  case 401:
-    statusMessage = 'Response status code: 401 - Unauthorized';
-    break;
-  case 403:
-    statusMessage = 'Response status code: 403 - Forbidden';
-    break;
-  case 404:
-    statusMessage = 'Response status code: 404 - Not Found';
-    break;
-  case 500:
-    statusMessage = 'Response status code: 500 - Internal Server Error';
-    break;
-  case 502:
-    statusMessage = 'Response status code: 502 - Bad Gateway';
-    break;
-  case 503:
-    statusMessage = 'Response status code: 503 - Service Unavailable';
-    break;
-  default:
-    statusMessage = 'Response status code: $statusCode';
-    break;
-}
-
+    String statusMessage;
+    switch (statusCode) {
+      case 200:
+        statusMessage = 'Response status code: 200 - OK';
+        break;
+      case 201:
+        statusMessage = 'Response status code: 201 - Created';
+        break;
+      case 204:
+        statusMessage = 'Response status code: 204 - No Content';
+        break;
+      case 400:
+        statusMessage = 'Response status code: 400 - Bad Request';
+        break;
+      case 401:
+        statusMessage = 'Response status code: 401 - Unauthorized';
+        break;
+      case 403:
+        statusMessage = 'Response status code: 403 - Forbidden';
+        break;
+      case 404:
+        statusMessage = 'Response status code: 404 - Not Found';
+        break;
+      case 500:
+        statusMessage = 'Response status code: 500 - Internal Server Error';
+        break;
+      case 502:
+        statusMessage = 'Response status code: 502 - Bad Gateway';
+        break;
+      case 503:
+        statusMessage = 'Response status code: 503 - Service Unavailable';
+        break;
+      default:
+        statusMessage = 'Response status code: $statusCode';
+        break;
+    }
 
     // Send the status message back to the main isolate.
     sendPort.send(statusMessage);
@@ -231,12 +229,9 @@ switch (statusCode) {
 
     debugPrint(statusMessage);
   }
-  
+
   @override
-  Future<void> sendNotification() async{
-    final response = await http.post(Uri.parse("https://fcm.googleapis.com/fcm/send"), headers: {
-      "Content-Type": "application/json",
-"Authorization": "key=<Server_key>"
-    });
+  Future<void> sendNotification() async {
+    
   }
 }
