@@ -1,6 +1,7 @@
 import 'dart:isolate';
 
 import 'package:camera_app/interfaces/camera_app_db_interface.dart';
+import 'package:camera_app/services/notification_services/notification_services.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
@@ -15,10 +16,6 @@ class ApiPictureRepository implements IPictureRepository {
   bool isApiConnected = false;
 
   String tokenString = "";
-
-  late Isolate _isolate;
-
-  late ReceivePort _receivePort;
 
   @override
   Future<List<Uint8List>> loadAllPictures() async {
@@ -232,6 +229,13 @@ class ApiPictureRepository implements IPictureRepository {
 
   @override
   Future<void> sendNotification() async {
-    
+    final response =
+        await http.get(Uri.parse('$_apiUrl/sendNotification'));
+
+    if(response.statusCode != 200) {
+        debugPrint('something went wrong ${response.body}');
+    }
+
+
   }
 }

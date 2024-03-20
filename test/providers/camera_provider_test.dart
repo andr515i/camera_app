@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:camera_app/interfaces/camera_app_db_interface.dart';
 import 'package:camera_app/providers/camera_provider.dart';
-import 'package:camera_app/providers/repositories/PictureRepo.dart';
+import 'package:camera_app/providers/repositories/pictureRepo.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
