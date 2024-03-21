@@ -91,15 +91,16 @@ class GalleryScreenState extends State<GalleryScreen> {
               borderRadius: BorderRadius.circular(12),
               child: SizedBox(
                 height: 150,
-                width: 150,
-                child: Image.asset("images/empty.png"), // Placeholder image.
+                width: double.infinity,
+                child: Image.asset("images/empty.png", fit: BoxFit.fill,), // Placeholder image.
               ),
             ),
           );
         }
       },
       onWillAcceptWithDetails: (data) {
-        return base64Encode(data.data) == encodedPicture; // Accept only if pictures match.
+        // return base64Encode(data.data) == encodedPicture; // Accept only if pictures match.
+        return true;
       },
       onAcceptWithDetails: (data) {
         setState(() {
@@ -136,6 +137,7 @@ class GalleryScreenState extends State<GalleryScreen> {
                             return _buildDragTarget(index, pictureBytes); // Build draggable targets.
                           },
                         );
+          
                       } else {
                         return const Center(child: Text('No pictures found.'));
                       }
