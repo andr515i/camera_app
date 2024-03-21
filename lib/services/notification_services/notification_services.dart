@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService extends ChangeNotifier {
@@ -141,11 +142,23 @@ class NotificationService extends ChangeNotifier {
 
     // show the notification
     Future.delayed(Duration.zero, () {
-      _localPlugin.show(index, message.notification?.title.toString(),
-          message.notification?.body.toString(), notificationDetails,
+      _localPlugin.show(index, message.notification?.title,
+          message.notification?.body, notificationDetails,
           payload: ext);
     });
 
     index++; // index is the id used for notifications. need to increase incase we ever want to show a different notification
+  }
+
+  Future<void> sendNotification() async {
+    RemoteMessage mes = RemoteMessage(
+        senderId: (index++).toString(),
+        data: {
+          "from flutter": "to you",
+        },
+        notification: const RemoteNotification(
+            title: "remote notification might not be so remote after all",
+            body: "FETCH ME THEIR SOULS"));
+    _showNotification(mes);
   }
 }

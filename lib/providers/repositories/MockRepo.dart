@@ -2,6 +2,7 @@ import 'dart:isolate';
 
 import 'package:camera_app/interfaces/camera_app_db_interface.dart';
 import 'package:camera_app/models/login.dart';
+import 'package:camera_app/services/notification_services/notification_services.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -94,6 +95,7 @@ class MockPictureRepository implements IPictureRepository {
     sendPort.send(statusMessage);
   }
 
+  @override
   Future<void> handleResponse(int statusCode) async {
     // Create a ReceivePort to receive messages from the isolate.
     final receivePort = ReceivePort();
@@ -113,11 +115,10 @@ class MockPictureRepository implements IPictureRepository {
     debugPrint(statusMessage);
   }
 
-
-  
   @override
-  Future<void> sendNotification() {
-    // TODO: implement sendNotification
-    throw UnimplementedError();
+  Future<void> sendNotification() async {
+    var notificationService = NotificationService();
+    await notificationService.sendNotification();
+    debugPrint('0');
   }
 }

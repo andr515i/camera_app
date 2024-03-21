@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:camera_app/firebase_options.dart';
 import 'package:camera_app/interfaces/camera_app_db_interface.dart';
-import 'package:camera_app/providers/repositories/MockRepo.dart';
-import 'package:camera_app/providers/repositories/PictureRepo.dart';
+import 'package:camera_app/providers/repositories/mockRepo.dart';
+import 'package:camera_app/providers/repositories/pictureRepo.dart';
 import 'package:camera_app/screens/login_screen.dart';
 import 'package:camera_app/screens/test.dart';
 import 'package:camera_app/services/notification_services/notification_services.dart';
@@ -24,8 +24,8 @@ final NotificationService _notificationService =
 var index = 0; // notification id, gets incremented by 1 every notification
 
 Future<void> main() async {
-  WidgetsFlutterBinding
-      .ensureInitialized(); // app wont work if the widgets havent been initialized before starting MyApp
+  // app wont work if the widgets havent been initialized before starting MyApp
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: DefaultFirebaseOptions
           .currentPlatform); // initialize firebase app with default platform specific options.
@@ -37,6 +37,8 @@ Future<void> main() async {
 
   FirebaseMessaging.onBackgroundMessage(
       _backgroundHandler); // handle background messages.
+
+      print('token: ${await FirebaseMessaging.instance.getToken()}');
 
   await _setupCamera(); // setup the camera
 
@@ -93,10 +95,10 @@ class MyApp extends StatelessWidget {
       providers: [
         // create the providers used (change if api is connected or not.) possible future upgrade would be to apply the mock repo incase there is no connection to the api, and then seamlessly switch them out when connection can be made.
         ChangeNotifierProvider(
+            // create: (cameraProvider) =>
+            //     CameraProvider(_cameraController, apiRepo)),
             create: (cameraProvider) =>
-                CameraProvider(_cameraController, apiRepo)),
-        // create: (cameraProvider) =>
-        //     CameraProvider(_cameraController, mockRepo)),
+                CameraProvider(_cameraController, mockRepo)),
       ],
       child: MaterialApp(
         title: 'Camera App',
