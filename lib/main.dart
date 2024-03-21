@@ -5,6 +5,7 @@ import 'package:camera_app/interfaces/camera_app_db_interface.dart';
 import 'package:camera_app/providers/repositories/MockRepo.dart';
 import 'package:camera_app/providers/repositories/PictureRepo.dart';
 import 'package:camera_app/screens/login_screen.dart';
+import 'package:camera_app/screens/test.dart';
 import 'package:camera_app/services/notification_services/notification_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -102,7 +103,7 @@ class MyApp extends StatelessWidget {
         initialRoute: "/login",
         routes: {
           '/login': (context) =>
-              const LoginScreen(), // start screen is login screen.
+              const Test(), // start screen is login screen.
           '/home': (context) =>
               const MyHomePage() // but the actual home page is MyHomePage (which is a tab view starting with the camera screen)
         },
